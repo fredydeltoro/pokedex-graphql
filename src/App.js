@@ -1,5 +1,7 @@
 import './App.css';
 import Autocomplete from './Autocomplete'
+import Pokemon from './Pokemon';
+import { Routes, Route } from "react-router-dom"
 
 function App() {
   return (
@@ -8,7 +10,10 @@ function App() {
         <h1>Pokedex</h1>
       </header>
       <main>
-        <Autocomplete />
+        <Routes>
+          <Route path='/' element={<Autocomplete />} />
+          <Route path='/pokemons/:pokemonId' element={<Pokemon />} />
+        </Routes>
       </main>
     </div>
   );
