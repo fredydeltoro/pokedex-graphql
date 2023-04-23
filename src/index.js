@@ -5,6 +5,8 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { BrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "./store";
 
 const client = new ApolloClient({
   uri: "https://beta.pokeapi.co/graphql/v1beta",
@@ -13,11 +15,13 @@ const client = new ApolloClient({
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
+<Provider store={store}>
   <ApolloProvider client={client}>
     <BrowserRouter>
       <App />
     </BrowserRouter>
   </ApolloProvider>
+</Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function
