@@ -3,15 +3,11 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import store from "./store";
-
-const client = new ApolloClient({
-  uri: "https://beta.pokeapi.co/graphql/v1beta",
-  cache: new InMemoryCache(),
-});
+import store from "./redux/store";
+import client from "./client";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

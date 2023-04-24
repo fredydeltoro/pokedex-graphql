@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchPokemon } from "./actions";
+import { fetchPokemon } from "./redux/actions";
 
 const Pokemon = () => {
   const dispatch = useDispatch();
@@ -9,10 +9,10 @@ const Pokemon = () => {
   const pokemon = useSelector((state) => state.pokemon);
 
   useEffect(() => {
-    dispatch(fetchPokemon());
+    dispatch(fetchPokemon(parseInt(pokemonId)));
   }, []);
 
-  return <div>Pokemon</div>;
+  return <div>{pokemon.name}</div>;
 };
 
 export default Pokemon;
