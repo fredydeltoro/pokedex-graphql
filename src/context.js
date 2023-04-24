@@ -1,3 +1,6 @@
 import { createContext } from "react";
 
-const TitleContext = createContext("");
+export const TitleContext = createContext({
+  title: "",
+  setTitle: () => {},
+});

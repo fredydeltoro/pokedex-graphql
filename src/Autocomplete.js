@@ -1,65 +1,59 @@
-import { useState } from 'react'
-import { gql, useQuery } from '@apollo/client';
+import { useState, useContext, useEffect } from "react";
+import { gql, useQuery } from "@apollo/client";
+import { TitleContext } from "./context";
+import { Link } from "react-router-dom";
 
 const GET_GEN_3 = gql`
   query getGen3($pokemon: String) {
-    pokemon_v2_pokemonsprites(
+    pokemon_v2_pokemon(
       order_by: { id: asc }
-      where: {
-        pokemon_v2_pokemon: {
-          name: {
-            _iregex: $pokemon
-          }
-        }
-      }
+      where: { name: { _iregex: $pokemon } }
+      limit: 20
     ) {
-      pokemon_v2_pokemon {
-        name
-      }
-      sprites
+      name
+      id
     }
   }
 `;
 
 function debounce(func, timeout = 100) {
-  let timer
+  let timer;
 
   return (...args) => {
-    clearTimeout(timer)
+    clearTimeout(timer);
     timer = setTimeout(() => {
-      func.apply(this, args)
-    }, timeout)
-  }
-
+      func.apply(this, args);
+    }, timeout);
+  };
 }
 
 const Autocomplete = () => {
-
-  const [pokemon, setPokemon] = useState(' ')
+  const context = useContext(TitleContext);
+  const [pokemon, setPokemon] = useState(" ");
   const { loading, error, data } = useQuery(GET_GEN_3, {
-    variables: { pokemon }
+    variables: { pokemon },
   });
 
-  const handleInput = debounce(e => {
-    const value = e.target.value
-    
+  const handleFocus = () => {
+    setPokemon("");
+  };
+
+  const handleInput = debounce((e) => {
+    const value = e.target.value;
+
     if (value.length) {
-      setPokemon(e.target.value.trim())
+      setPokemon(e.target.value.trim());
     } else {
-      setPokemon(' ')
+      setPokemon(" ");
     }
-  }, 300)
+  }, 300);
 
-  const merge = (result) => ({
-    name: result['pokemon_v2_pokemon'].name,
-    sprites: JSON.parse(result.sprites)
-  })
-   
+  useEffect(() => {
+    context.setTitle("");
+  }, []);
 
-
-   
-   return (
-    <div className='App-autocomplete'>
+  return (
+    <div className="App-autocomplete">
       <div id="autocomplete">
         <div className="input-box">
           <div className="input">
@@ -67,30 +61,26 @@ const Autocomplete = () => {
               type="text"
               id="search-input"
               placeholder="Search"
-              onChange={(e) => handleInput(e)} />
+              onChange={(e) => handleInput(e)}
+              onFocus={() => handleFocus()}
+              autoComplete="off"
+            />
           </div>
-         </div>
-         {
-           data && (
-            <div id="suggestions">
-              <ul>
-                 {
-                   data['pokemon_v2_pokemonsprites'].map(merge).map((p) => (
-                     <li>
-                       <div>{p.name }</div>
-                       <div>
-                         <img src={p.sprites.front_default} alt="no image" />
-                       </div>
-                     </li>
-                   ))
-                 }
-              </ul>
-            </div> 
-           )
-         }
+        </div>
+        {data && (
+          <div id="suggestions">
+            <ul>
+              {data["pokemon_v2_pokemon"].map((p) => (
+                <li key={p.id}>
+                  <Link to={`/pokemons/${p.id}`}>{p.name}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Autocomplete
+export default Autocomplete;
